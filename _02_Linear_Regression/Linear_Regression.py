@@ -7,7 +7,7 @@ try:
 except ImportError as e:
     os.system("sudo pip3 install numpy")
     import numpy as np
-
+x,y=read_data()
 def ridge(data):
     pass
     
