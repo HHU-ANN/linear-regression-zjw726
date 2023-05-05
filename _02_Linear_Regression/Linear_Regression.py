@@ -8,18 +8,26 @@ except ImportError as e:
     os.system("sudo pip3 install numpy")
     import numpy as np
 
-def modeltest(x, y):
-    return np.dot(np.linalg.inv(np.dot(x.T,x)),np.dot(x.T,y))
 def ridge(data):
     x, y = read_data()
-    w = modeltest(x, y)
+    ep=np.eye(6)
+    a=0.5
+    w = np.dot(np.linalg.inv(np.dot(x.T, x)+a*ep), np.dot(x.T, y))
     return data @ w
     
 def lasso(data):
     x, y = read_data()
-    w = modeltest(x, y)
-    return data @ w 
-
+    a = 0.01
+    ep = 10000
+    lr = 0.001
+    w = np.zeros(X.shape[1])
+    for i in range(ep):
+        grad = np.matmul(X.T, np.matmul(X, w) - y) / X.shape[0] + a * np.sign(w)
+        grad_norm = np.linalg.norm(grad)
+        if grad_norm > 1:
+            grad /= grad_norm
+        w -= lr * grad
+    return data @ w
                  
 def read_data(path='./data/exp02/'):
     x = np.load(path + 'X_train.npy')
